@@ -69,6 +69,9 @@ public class ConnectedContigContractionTask implements Runnable {
   		if (!alreadyMerged) {
   			merged = nextEdge.contract(0);
   		}
+  		
+  		//System.out.println("Merged: " + nextEdge.getContig1().getId() + " " + nextEdge.getContig2().getId());
+  		//System.out.println("to: " + merged.getId());
 
   		merged.find30Mers(new UniqueKmerInContigFinder(false, u30mers));
 
@@ -111,11 +114,9 @@ public class ConnectedContigContractionTask implements Runnable {
   		// Previous contig was RCed. Therefore any existing edges must factor this into consideration
   		if (!isContigMergedFirst && isSecondContigMergedRC) {
   			// Since we know that this contig was RCed, just invert RC status on previous edge
-  			newEdge = ContigManager.getContigScore(newContig, !isSecondContigRC? otherContig.getRCContig():
-  																						otherContig, !isSecondContigRC);
+  			newEdge = ContigManager.getContigScore(newContig, otherContig, !isSecondContigRC);
   		} else {
-  			newEdge = ContigManager.getContigScore(newContig, isSecondContigRC? otherContig.getRCContig():
-  																						otherContig, isSecondContigRC);
+  			newEdge = ContigManager.getContigScore(newContig, otherContig, isSecondContigRC);
   		}
 
   		if (newEdge.getWeight() > -1) {

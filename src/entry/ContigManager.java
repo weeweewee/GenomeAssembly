@@ -41,7 +41,7 @@ public class ContigManager {
   }
   
   public static String getNewContigId() {
-  	return "contig" + contigId++;
+  	return "@contig" + contigId++;
   }
   
   public static void addToTrace1(String id, String message) {
@@ -129,7 +129,7 @@ public class ContigManager {
   					continue;
   				}
   				ContigAlignmentEdge e1 = getContigScore(c1,c2,false);
-  				ContigAlignmentEdge e2 = getContigScore(c1,c2.getRCContig(),true);
+  				ContigAlignmentEdge e2 = getContigScore(c1,c2,true);
   				ContigAlignmentEdge betterEdge = null; 
   				if (e1.getWeight() >= e2.getWeight()) {
   					if (e1.getWeight() > 0) {
@@ -157,7 +157,7 @@ public class ContigManager {
   					continue;
   				}
   				ContigAlignmentEdge e1 = getContigScore(c1,c2,false);
-  				ContigAlignmentEdge e2 = getContigScore(c1,c2.getRCContig(),true);
+  				ContigAlignmentEdge e2 = getContigScore(c1,c2,true);
   				ContigAlignmentEdge betterEdge = null; 
   				if (e1.getWeight() >= e2.getWeight()) {
   					if (e1.getWeight() > 0) {
@@ -185,7 +185,7 @@ public class ContigManager {
   					continue;
   				}
   				ContigAlignmentEdge e1 = getContigScore(c1,c2,false);
-  				ContigAlignmentEdge e2 = getContigScore(c1,c2.getRCContig(),true);
+  				ContigAlignmentEdge e2 = getContigScore(c1,c2,true);
   				ContigAlignmentEdge betterEdge = null; 
   				if (e1.getWeight() >= e2.getWeight()) {
   					if (e1.getWeight() > 0) {
@@ -241,13 +241,18 @@ public class ContigManager {
   public static ContigAlignmentEdge getContigScore(Contig c1, Contig c2, boolean isc2RC) {
   	String c1String = c1.getRead();
   	String c2String = c2.getRead();
+  	Contig newc2 = c2;
+  	if (isc2RC) {
+  		newc2 = c2.getRCContig();
+  		c2String = Constants.REVERSE_COMPLEMENT(c2String);
+  	}
   	ArrayList<Integer> indexDiffChecked = new ArrayList<Integer>();
   	int i = 0, j = 0;
   	double score = -1;
   	int indexDiff = -1;
-  	while (i != c1.getUniqueKmers().size() && j != c2.getUniqueKmers().size()) {
+  	while (i != c1.getUniqueKmers().size() && j != newc2.getUniqueKmers().size()) {
   		Long c1kmer = c1.getUniqueKmers().get(i);
-  		Long c2kmer = c2.getUniqueKmers().get(j);
+  		Long c2kmer = newc2.getUniqueKmers().get(j);
   		if (c1kmer < c2kmer) {
   			i++;
   			continue;
@@ -260,7 +265,7 @@ public class ContigManager {
   		ArrayList<Integer> c1Indexes = new ArrayList<Integer>();
   		c1.find30Mers(new UniqueKmerIndexFinder(c1Indexes, c1kmer));
   		ArrayList<Integer> c2Indexes = new ArrayList<Integer>();
-  		c2.find30Mers(new UniqueKmerIndexFinder(c2Indexes, c2kmer));
+  		newc2.find30Mers(new UniqueKmerIndexFinder(c2Indexes, c2kmer));
   		
   		for (int a = 0; a < c1Indexes.size(); a++) {
   			for (int b = 0; b < c2Indexes.size(); b++) {

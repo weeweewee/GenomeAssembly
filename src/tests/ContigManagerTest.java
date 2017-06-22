@@ -21,6 +21,7 @@ public class ContigManagerTest {
 
 		ContigAlignmentEdge edge = ContigManager.getContigScore(c1, c2, true);
 		
+		//NOTE: fails due to change in min_overlap_length from 35 to 140
 		assertEquals(37L, edge.getWeight(), 0.01);
 		assertEquals(c1, edge.getContig1());
 		assertEquals(c2, edge.getContig2());
