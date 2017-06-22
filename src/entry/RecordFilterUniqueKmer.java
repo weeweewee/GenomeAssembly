@@ -28,7 +28,7 @@ public class RecordFilterUniqueKmer {
   }
   
   private void printRecordsContainingKmers(String fasta) {
-  	FastaFastqReader ir = new FastaFastqReader(fasta);
+  	FastaFastqReader ir = new FastaFastqReader(fasta, false);
   	ir.Read(new ValidReadMethod() {
   		public void RunFunction(String id, String read1, String read2) {
   			RecordNode node = new RecordNode(id, read1, read2);

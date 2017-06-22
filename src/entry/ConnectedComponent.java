@@ -380,7 +380,8 @@ public class ConnectedComponent {
   }
 
   public void createNodes(String fasta) {
-  	FastaFastqReader ir = new FastaFastqReader(fasta);
+  	//TODO: remove hardcoded true here for bypassing
+  	FastaFastqReader ir = new FastaFastqReader(fasta, false);
 
   	ir.Read(new ValidReadMethod() {
   		public void RunFunction(String id, String read1, String read2) {
@@ -438,7 +439,7 @@ public class ConnectedComponent {
   	ConnectedComponent cc = new ConnectedComponent(args[0], args[1]);
   	// Comment out line below for immediate processing of contigs (ie. single end instead
   	// of paired end)
-  	//cc.joinRecords();
+  	cc.joinRecords();
   	ContigManager cm = new ContigManager(cc.getUniqueKmers());
   	cc.initContigManager(cm, true);
   	// Frees up memory

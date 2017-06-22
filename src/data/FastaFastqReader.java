@@ -8,10 +8,13 @@ public class FastaFastqReader {
 	private String file1;
 	private String file2;
 	private boolean isFastQ;
+	private boolean bypass;
 
-	public FastaFastqReader(String fileName) {
+	//bypassName implies that we only want to use this for simply creating nodes
+	public FastaFastqReader(String fileName, boolean bypassName) {
 		file1 = fileName;
 		file2 = null;
+		bypass = bypassName;
 	}
 
 	public FastaFastqReader(String fileName1, String fileName2) {
@@ -33,9 +36,14 @@ public class FastaFastqReader {
         String read2 = br2 == null? br1.readLine() : br2.readLine();
 
         String id1 = line1.split(Constants.SPACE_DELIMS)[0];
-
-        if (id1.equals(line2.split(Constants.SPACE_DELIMS)[0])) {
+        
+        if (bypass) {
         	toCall.RunFunction(id1, read1, read2);
+        	continue;
+        } else {
+        	if (id1.equals(line2.split(Constants.SPACE_DELIMS)[0])) {
+        		toCall.RunFunction(id1, read1, read2);
+        	}
         }
 
         if (isFastQ) {
